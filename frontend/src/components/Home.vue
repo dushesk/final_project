@@ -108,15 +108,22 @@ export default {
       }
     },
     deleteExpense() {
+    axios
+    .delete(`http://localhost:<port>/deleteexpense/${this.expenseIdToDelete}`)
+    .then(() => {
+      // Удаление на клиенте только после успешного удаления на сервере
       const index = this.expenses.findIndex(expense => expense._id === this.expenseIdToDelete);
       if (index !== -1) {
         this.expenses.splice(index, 1);
         alert('Expense deleted successfully!');
-        this.expenseIdToDelete = '';
-      } else {
-        alert('Expense not found!');
       }
+      this.expenseIdToDelete = '';
+    })
+    .catch(error => {
+      alert(error.response?.data?.message || 'Failed to delete expense');
+    });
     }
+
   }
 };
 </script>

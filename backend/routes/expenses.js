@@ -21,8 +21,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Удаление расхода 
-
 // Удаление расхода
 router.delete('/deleteexpense/:id', async (req, res) => {
   try {
