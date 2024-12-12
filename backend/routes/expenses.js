@@ -4,7 +4,7 @@ const db = require('../db');
 
 const router = express.Router();
 
-// Создание нового расхода
+// Создание нового расхода по ид пользователя
 router.post('/', async (req, res) => {
   try {
     const { user_id, category_id, amount, date, description } = req.body;
@@ -20,6 +20,23 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// Удаление расхода
+router.delete('/deleteexpense/:id', async (req, res) => {
+  try {
+    const expenseId = req.params.id; // Получение ID из параметров маршрута
+    const result = await db.getDb().collection('expenses').deleteOne({ _id: new ObjectId(expenseId) });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Expense not found' }); // Если расход не найден
+    }
+
+    res.json({ message: 'Expense deleted successfully' }); // Успешное удаление
+  } catch (error) {
+    res.status(500).json({ error: error.message }); // Ошибка сервера
+  }
+});
+
 
 // Обновление расхода
 router.put('/:id', async (req, res) => {
