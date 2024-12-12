@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import axios from 'axios'; // Импортируем Axios
+
 export default {
   name: 'App',
   data() {
@@ -99,43 +101,53 @@ export default {
   methods: {
     goToPage(page) {
       if (page === 'stats') {
-        // Удаляем user_id из localStorage при переходе на страницу статистики
         localStorage.removeItem('userId');
-
-        // Перенаправляем на страницу входа (LoginRegister.vue)
-        this.$router.push('/login'); // Используйте правильный путь для вашего компонента
+        this.$router.push('/login');
       } else {
         this.currentPage = page;
       }
     },
 
     // Метод добавления новой категории
-    addCategory() {
+    async addCategory() {
       if (this.newCategory.name && this.newCategory.description) {
-        const category = { ...this.newCategory, _id: Date.now().toString() };
-        this.categories.push(category);
-        this.newCategory = { name: '', description: '' };
+        try {
+          const response = await axios.post('http://localhost:3000/categories/', this.newCategory);
+          this.categories.push({ ...this.newCategory, _id: response.data.id });
+          this.newCategory = { name: '', description: '' };
+          alert('Категория успешно добавлена!');
+        } catch (error) {
+          console.error('Ошибка добавления категории:', error.message);
+          alert('Не удалось добавить категорию.');
+        }
       }
     },
 
     // Метод добавления расхода
-    addExpense() {
+    async addExpense() {
       if (this.newExpense.user_id && this.newExpense.category_id && this.newExpense.amount && this.newExpense.date) {
-        this.expenses.push({ ...this.newExpense, _id: Date.now().toString() });
-        alert('Expense added successfully!');
-        this.newExpense = { user_id: '', category_id: '', amount: '', date: '', description: '' };
+        try {
+          const response = await axios.post('http://localhost:3000/expenses/', this.newExpense);
+          this.expenses.push({ ...this.newExpense, _id: response.data.id });
+          alert('Расход успешно добавлен!');
+          this.newExpense = { user_id: '', category_id: '', amount: '', date: '', description: '' };
+        } catch (error) {
+          console.error('Ошибка добавления расхода:', error.message);
+          alert('Не удалось добавить расход.');
+        }
       }
     },
 
     // Метод удаления расхода
-    deleteExpense() {
-      const index = this.expenses.findIndex(expense => expense._id === this.expenseIdToDelete);
-      if (index !== -1) {
-        this.expenses.splice(index, 1);
-        alert('Expense deleted successfully!');
+    async deleteExpense() {
+      try {
+        await axios.delete(`http://localhost:3000/expenses/deleteexpense/${this.expenseIdToDelete}`);
+        this.expenses = this.expenses.filter(expense => expense._id !== this.expenseIdToDelete);
+        alert('Расход успешно удалён!');
         this.expenseIdToDelete = '';
-      } else {
-        alert('Expense not found!');
+      } catch (error) {
+        console.error('Ошибка удаления расхода:', error.message);
+        alert('Не удалось удалить расход.');
       }
     }
   }
