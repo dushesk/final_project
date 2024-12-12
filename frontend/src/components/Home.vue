@@ -5,7 +5,7 @@
 
     <div class="navbar">
       <a href="#" @click.prevent="goToPage('home')">Home</a>
-      <a href="#" @click.prevent="goToPage('stats')">Statistics</a>
+      <a href="#" @click.prevent="goToPage('stats')">Exit</a>
     </div>
 
     <div class="container">
@@ -15,8 +15,64 @@
           This service allows you to track your expenses and see your spending patterns.
         </p>
 
-        <!-- Forms to add and delete categories/expenses -->
-        <!-- Form code here remains the same -->
+        <!-- Форма для добавления категории -->
+        <div class="form-container">
+          <form @submit.prevent="addCategory">
+            <div>
+              <label for="categoryName">Category Name</label>
+              <input type="text" id="categoryName" v-model="newCategory.name" required />
+            </div>
+            <div>
+              <label for="categoryDescription">Description</label>
+              <input type="text" id="categoryDescription" v-model="newCategory.description" required />
+            </div>
+            <button type="submit">Add Category</button>
+          </form>
+        </div>
+
+        <!-- Форма для добавления расхода -->
+        <div class="form-container">
+          <form @submit.prevent="addExpense">
+            <div>
+              <label for="userId">User ID</label>
+              <input type="text" id="userId" v-model="newExpense.user_id" required />
+            </div>
+            <div>
+              <label for="categoryInput">Category</label>
+              <!-- Селектор для выбора категории по ID -->
+              <select v-model="newExpense.category_id" required>
+                <option value="" disabled>Select Category</option>
+                <option v-for="category in categories" :key="category._id" :value="category._id">
+                  {{ category.name }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label for="amount">Amount</label>
+              <input type="number" id="amount" v-model="newExpense.amount" required />
+            </div>
+            <div>
+              <label for="date">Date</label>
+              <input type="date" id="date" v-model="newExpense.date" required />
+            </div>
+            <div>
+              <label for="expenseDescription">Description</label>
+              <input type="text" id="expenseDescription" v-model="newExpense.description" required />
+            </div>
+            <button type="submit">Add Expense</button>
+          </form>
+        </div>
+
+        <!-- Форма для удаления расхода -->
+        <div class="form-container">
+          <form @submit.prevent="deleteExpense">
+            <div>
+              <label for="expenseId">Expense ID</label>
+              <input type="text" id="expenseId" v-model="expenseIdToDelete" required />
+            </div>
+            <button type="submit">Delete Expense</button>
+          </form>
+        </div>
       </div>
 
       <div v-if="currentPage === 'stats'" class="stats-page">
@@ -36,7 +92,7 @@ export default {
       newCategory: { name: '', description: '' },
       newExpense: { user_id: '', category_id: '', amount: '', date: '', description: '' },
       expenseIdToDelete: '',
-      categories: [],
+      categories: [], // Массив для категорий
       expenses: [] // Массив для хранения расходов
     };
   },
@@ -53,12 +109,16 @@ export default {
       }
     },
 
+    // Метод добавления новой категории
     addCategory() {
       if (this.newCategory.name && this.newCategory.description) {
-        this.categories.push({ ...this.newCategory, _id: Date.now().toString() });
+        const category = { ...this.newCategory, _id: Date.now().toString() };
+        this.categories.push(category);
         this.newCategory = { name: '', description: '' };
       }
     },
+
+    // Метод добавления расхода
     addExpense() {
       if (this.newExpense.user_id && this.newExpense.category_id && this.newExpense.amount && this.newExpense.date) {
         this.expenses.push({ ...this.newExpense, _id: Date.now().toString() });
@@ -66,6 +126,8 @@ export default {
         this.newExpense = { user_id: '', category_id: '', amount: '', date: '', description: '' };
       }
     },
+
+    // Метод удаления расхода
     deleteExpense() {
       const index = this.expenses.findIndex(expense => expense._id === this.expenseIdToDelete);
       if (index !== -1) {
