@@ -100,7 +100,7 @@ export default {
     goToPage(page) {
       if (page === 'stats') {
         // Удаляем user_id из localStorage при переходе на страницу статистики
-        localStorage.removeItem('user_id');
+        localStorage.removeItem('userId');
 
         // Перенаправляем на страницу входа (LoginRegister.vue)
         this.$router.push('/login'); // Используйте правильный путь для вашего компонента
