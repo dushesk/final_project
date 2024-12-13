@@ -3,6 +3,12 @@
     <img src="../assets/main.png" alt="Main Image" class="main-image" />
     <img src="../assets/main1.png" alt="Logo" class="logo" />
 
+    <!-- Информация о пользователе -->
+    <div class="user-info">
+      <p><strong>Name:</strong> {{ userName }}</p>
+      <p><strong>Email:</strong> {{ userEmail }}</p>
+    </div>
+
     <div class="navbar">
       <a href="#" @click.prevent="goToPage('home')">Home</a>
       <a href="#" @click.prevent="goToPage('stats')">Exit</a>
@@ -39,7 +45,6 @@
             </div>
             <div>
               <label for="categoryInput">Category</label>
-              <!-- Селектор для выбора категории по ID -->
               <select v-model="newExpense.category_id" required>
                 <option value="" disabled>Select Category</option>
                 <option v-for="category in categories" :key="category._id" :value="category._id">
@@ -84,8 +89,6 @@
 </template>
 
 <script>
-import axios from 'axios'; // Импортируем Axios
-
 export default {
   name: 'App',
   data() {
@@ -95,59 +98,42 @@ export default {
       newExpense: { user_id: '', category_id: '', amount: '', date: '', description: '' },
       expenseIdToDelete: '',
       categories: [], // Массив для категорий
-      expenses: [] // Массив для хранения расходов
+      expenses: [], // Массив для хранения расходов
+      userName: localStorage.getItem('user_name') || 'Guest', // Получение имени из localStorage
+      userEmail: localStorage.getItem('user_email') || 'Not provided' // Получение почты из localStorage
     };
   },
   methods: {
     goToPage(page) {
       if (page === 'stats') {
-        localStorage.removeItem('userId');
+        localStorage.removeItem('user_id');
         this.$router.push('/login');
       } else {
         this.currentPage = page;
       }
     },
-
-    // Метод добавления новой категории
-    async addCategory() {
+    addCategory() {
       if (this.newCategory.name && this.newCategory.description) {
-        try {
-          const response = await axios.post('http://localhost:3000/categories/', this.newCategory);
-          this.categories.push({ ...this.newCategory, _id: response.data.id });
-          this.newCategory = { name: '', description: '' };
-          alert('Категория успешно добавлена!');
-        } catch (error) {
-          console.error('Ошибка добавления категории:', error.message);
-          alert('Не удалось добавить категорию.');
-        }
+        const category = { ...this.newCategory, _id: Date.now().toString() };
+        this.categories.push(category);
+        this.newCategory = { name: '', description: '' };
       }
     },
-
-    // Метод добавления расхода
-    async addExpense() {
+    addExpense() {
       if (this.newExpense.user_id && this.newExpense.category_id && this.newExpense.amount && this.newExpense.date) {
-        try {
-          const response = await axios.post('http://localhost:3000/expenses/', this.newExpense);
-          this.expenses.push({ ...this.newExpense, _id: response.data.id });
-          alert('Расход успешно добавлен!');
-          this.newExpense = { user_id: '', category_id: '', amount: '', date: '', description: '' };
-        } catch (error) {
-          console.error('Ошибка добавления расхода:', error.message);
-          alert('Не удалось добавить расход.');
-        }
+        this.expenses.push({ ...this.newExpense, _id: Date.now().toString() });
+        alert('Expense added successfully!');
+        this.newExpense = { user_id: '', category_id: '', amount: '', date: '', description: '' };
       }
     },
-
-    // Метод удаления расхода
-    async deleteExpense() {
-      try {
-        await axios.delete(`http://localhost:3000/expenses/deleteexpense/${this.expenseIdToDelete}`);
-        this.expenses = this.expenses.filter(expense => expense._id !== this.expenseIdToDelete);
-        alert('Расход успешно удалён!');
+    deleteExpense() {
+      const index = this.expenses.findIndex(expense => expense._id === this.expenseIdToDelete);
+      if (index !== -1) {
+        this.expenses.splice(index, 1);
+        alert('Expense deleted successfully!');
         this.expenseIdToDelete = '';
-      } catch (error) {
-        console.error('Ошибка удаления расхода:', error.message);
-        alert('Не удалось удалить расход.');
+      } else {
+        alert('Expense not found!');
       }
     }
   }
