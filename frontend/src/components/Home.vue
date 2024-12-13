@@ -99,9 +99,40 @@ export default {
       expenseIdToDelete: '',
       categories: [], // Массив для категорий
       expenses: [], // Массив для хранения расходов
-      userName: localStorage.getItem('user_name') || 'Guest', // Получение имени из localStorage
-      userEmail: localStorage.getItem('user_email') || 'Not provided' // Получение почты из localStorage
+      userName: 'Guest',
+      userEmail: 'Not provided', // при входе на страницу они изменяются
     };
+  },
+  async created() {
+    // Получить userId из localStorage при создании компонента
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      try {
+        // Запрос к API для получения данных пользователя
+        const response = await fetch(`http://localhost:3000/users/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const userData = await response.json();
+        
+        // обновить данные пользователя
+        this.userName = userData.name;
+        this.userEmail = userData.email;
+        
+        // // Опционально можно сохранить в localStorage
+        // localStorage.setItem('user_name', userData.name);
+        // localStorage.setItem('user_email', userData.email);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+     }
+    }
   },
   methods: {
     goToPage(page) {
