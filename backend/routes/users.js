@@ -28,4 +28,43 @@ router.get('/:id/expenses', async (req, res) => {
   }
 });
 
+// Получение данных пользователя по ID - 1 сервер
+router.get('/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await db.getDb().collection('users')
+      .findOne(
+        { _id: new ObjectId(userId) },
+        { projection: { name: 1, email: 1 } } // выбрать только name и email
+      );
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Получение email пользователей по началу имени - 2 сервис
+router.get('/emails/startswith/:prefix', async (req, res) => {
+  try {
+    const prefix = req.params.prefix;
+    const users = await db.getDb().collection('users')
+      .find(
+        { name: { $regex: `^${prefix}`, $options: 'i' } }, // i для регистронезависимого поиска
+        { projection: { email: 1 } }
+      )
+      .toArray();
+    
+    const emails = users.map(user => user.email);
+    res.json(emails);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 module.exports = router;

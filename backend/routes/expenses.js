@@ -57,7 +57,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Получение суммарных расходов по категориям
+// Получение суммарных расходов по категориям - 2 сервис
 router.get('/summary', async (req, res) => {
   try {
     const summary = await db.getDb().collection('expenses')
@@ -84,5 +84,24 @@ router.get('/summary', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// Получение описаний расходов больше определенной суммы - 2 сервис
+router.get('/descriptions/:minAmount', async (req, res) => {
+  try {
+    const minAmount = parseInt(req.params.minAmount);
+    const expenses = await db.getDb().collection('expenses')
+      .find(
+        { amount: { $gt: minAmount } },
+        { projection: { description: 1 } }
+      )
+      .toArray();
+    
+    const descriptions = expenses.map(expense => expense.description);
+    res.json(descriptions);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 module.exports = router;
