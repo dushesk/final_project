@@ -13,6 +13,27 @@
       <div><strong>Email:</strong> {{ userEmail }}</div>
     </div>
 
+    <!-- Таблица с расходами -->
+    <div class="expenses-list" v-if="expenses.length > 0">
+      <h2>User Expenses</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="expense in expenses" :key="expense._id">
+            <td>{{ expense.date }}</td>
+            <td>{{ expense.amount }}</td>
+            <td class="description">{{ expense.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
     <div class="container">
       <div v-if="currentPage === 'home'" class="main-page">
         <h1>Welcome to Financial Tracker</h1>
@@ -99,34 +120,27 @@ export default {
     };
   },
   async created() {
-    // Получить userId из localStorage при создании компонента
     const userId = localStorage.getItem('userId');
     if (userId) {
+      this.newExpense.user_id = userId; // подставить userId в форму
+
       try {
         // Запрос к API для получения данных пользователя
-        const response = await fetch(`http://localhost:3000/users/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+        const userResponse = await fetch(`http://localhost:3000/users/${userId}`);
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          this.userName = userData.name;
+          this.userEmail = userData.email;
         }
 
-        const userData = await response.json();
-        
-        // обновить данные пользователя
-        this.userName = userData.name;
-        this.userEmail = userData.email;
-        
-        // // Опционально можно сохранить в localStorage
-        // localStorage.setItem('user_name', userData.name);
-        // localStorage.setItem('user_email', userData.email);
+        // Запрос к API для получения расходов
+        const expensesResponse = await fetch(`http://localhost:3000/expenses/${userId}/info`);
+        if (expensesResponse.ok) {
+          this.expenses = await expensesResponse.json();
+        }
       } catch (error) {
-        console.error('Error fetching user data:', error);
-     }
+        console.error('Error fetching data:', error);
+      }
     }
   },
   methods: {
