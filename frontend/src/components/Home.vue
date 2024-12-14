@@ -62,10 +62,6 @@
         <div class="form-container">
           <form @submit.prevent="addExpense">
             <div>
-              <label for="userId">User ID</label>
-              <input type="text" id="userId" v-model="newExpense.user_id" required />
-            </div>
-            <div>
               <!-- <label for="categoryInput">Category Id</label>
               <select v-model="newExpense.category_id" required>
                 <option value="" disabled>Select Category</option>
