@@ -33,7 +33,7 @@
         </tbody>
       </table>
     </div>
-    
+
     <div class="container">
       <div v-if="currentPage === 'home'" class="main-page">
         <h1>Welcome to Financial Tracker</h1>
@@ -64,13 +64,15 @@
               <input type="text" id="userId" v-model="newExpense.user_id" required />
             </div>
             <div>
-              <label for="categoryInput">Category</label>
+              <!-- <label for="categoryInput">Category Id</label>
               <select v-model="newExpense.category_id" required>
                 <option value="" disabled>Select Category</option>
                 <option v-for="category in categories" :key="category._id" :value="category._id">
                   {{ category.name }}
                 </option>
-              </select>
+              </select> -->
+              <label for="categoryInput">Category Id</label>
+              <input type="text" id="categoryInput" v-model="newExpense.category_id" required />
             </div>
             <div>
               <label for="amount">Amount</label>
