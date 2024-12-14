@@ -13,21 +13,23 @@ body {
     width: 97%;
     background: #dda7ff;
     display: flex;
-    justify-content: center;
+    justify-content: end;
     padding: 15px 0;
     border-radius: 50px;
+    margin-top: 10px;
   }
   
   .navbar a {
     color: #ffffff;
     text-decoration: none;
-    margin: 0 15px;
+    margin: 0 30px;
     font-size: 1.2em;
     transition: color 0.3s;
   }
   
   .navbar a:hover {
-    color: #f0f8ff;
+    color: #ffd2f7;
+    cursor: pointer;
   }
   
   .container {
@@ -36,8 +38,7 @@ body {
     padding: 20px;
     background: #fff;
     border-radius: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);;
   }
   
   .form-container {
@@ -101,18 +102,28 @@ body {
   }
   
   .logo {
+    z-index: -100;
     position: absolute;
-    top: 10px;
-    left: 800px;
+    top: 10%;
+    left: 64%;
     width: 450px;
     height: 300px;
   }
   
   .main-image {
+    z-index: -100;
     position: absolute;
-    top: 220px;
-    left: 80px;
+    top: 300px;
+    left: 5%;
     width: 350px;
     height: 300px;
   }
   
+  .user-info{
+    display: flex;
+    justify-content: end;
+  }
+
+  .user-info > div{
+    margin: 20px;
+  }

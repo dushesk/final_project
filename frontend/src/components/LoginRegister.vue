@@ -105,6 +105,7 @@ export default {
           password: this.registerPassword,
         });
 
+        console.log('Register response:', response.data);
         // Сохранение userId в localStorage
         localStorage.setItem('userId', response.data.userId);
 

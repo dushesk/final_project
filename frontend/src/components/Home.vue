@@ -3,15 +3,14 @@
     <img src="../assets/main.png" alt="Main Image" class="main-image" />
     <img src="../assets/main1.png" alt="Logo" class="logo" />
 
-    <!-- Информация о пользователе -->
-    <div class="user-info">
-      <p><strong>Name:</strong> {{ userName }}</p>
-      <p><strong>Email:</strong> {{ userEmail }}</p>
+    <div class="navbar">
+      <a href="#" @click.prevent="goToPage('stats')">Exit</a>
     </div>
 
-    <div class="navbar">
-      <a href="#" @click.prevent="goToPage('home')">Home</a>
-      <a href="#" @click.prevent="goToPage('stats')">Exit</a>
+    <!-- Информация о пользователе -->
+    <div class="user-info">
+      <div><strong>Name:</strong> {{ userName }}</div>
+      <div><strong>Email:</strong> {{ userEmail }}</div>
     </div>
 
     <div class="container">
@@ -80,10 +79,6 @@
         </div>
       </div>
 
-      <div v-if="currentPage === 'stats'" class="stats-page">
-        <h2>Expense Statistics</h2>
-        <p>Statistics content will be displayed here.</p>
-      </div>
     </div>
   </div>
 </template>
@@ -136,12 +131,8 @@ export default {
   },
   methods: {
     goToPage(page) {
-      if (page === 'stats') {
-        localStorage.removeItem('user_id');
-        this.$router.push('/login');
-      } else {
-        this.currentPage = page;
-      }
+      localStorage.removeItem('user_id');
+      this.$router.push('/login');
     },
     addCategory() {
       if (this.newCategory.name && this.newCategory.description) {
