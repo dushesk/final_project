@@ -71,20 +71,20 @@ router.get('/expenses/:id/info', async (req, res) => {
   try {
     const userId = req.params.id;
 
-    // Выполнить запрос с фильтром по user_id и проекцией для amount и description
+    // Запрос с фильтром по user_id и проекцией для amount, description и date
     const expenses = await db.getDb().collection('expenses')
       .find(
         { user_id: new ObjectId(userId) },
-        { projection: { amount: 1, description: 1, _id: 0 } }
+        { projection: { amount: 1, description: 1, date: 1, _id: 0 } }
       )
       .toArray();
 
-    // Проверить, найдены ли расходы
+    // Проверка на наличие данных
     if (expenses.length === 0) {
       return res.status(404).json({ message: 'No expenses found for this user' });
     }
 
-    // Возврат найденных данных
+    // Возврат данных
     res.json(expenses);
   } catch (error) {
     res.status(500).json({ error: error.message });
