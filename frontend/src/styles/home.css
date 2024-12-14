@@ -127,3 +127,47 @@ body {
   .user-info > div{
     margin: 20px;
   }
+
+  /* отдельный блок для информации о пользователе */
+  .user-info-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  .user-info-container h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .user-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+  }
+  
+  .expenses-list table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .expenses-list th, .expenses-list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .expenses-list th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .expenses-list tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+  }

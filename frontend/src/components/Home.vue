@@ -7,36 +7,38 @@
       <a href="#" @click.prevent="goToPage('stats')">Exit</a>
     </div>
 
-    <!-- Информация о пользователе -->
-    <div class="user-info">
-      <div><strong>Name:</strong> {{ userName }}</div>
-      <div><strong>Email:</strong> {{ userEmail }}</div>
-    </div>
-
-    <!-- Таблица с расходами -->
-    <div class="expenses-list" v-if="expenses.length > 0">
-      <h2>User Expenses</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="expense in expenses" :key="expense._id">
-            <td>{{ expense.date }}</td>
-            <td>{{ expense.amount }}</td>
-            <td class="description">{{ expense.description }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Блок информации о пользователе и таблицы -->
+    <div class="user-info-container">
+      <h2>Your info</h2>
+      <div class="user-info">
+        <div><strong>Name:</strong> {{ userName }}</div>
+        <div><strong>Email:</strong> {{ userEmail }}</div>
+      </div>
+      <!-- Таблица с расходами -->
+      <div class="expenses-list" v-if="expenses.length > 0">
+        <h2>Your expenses</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Amount</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="expense in expenses" :key="expense._id">
+              <td>{{ expense.date }}</td>
+              <td>{{ expense.amount }}</td>
+              <td class="description">{{ expense.description }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="container">
       <div v-if="currentPage === 'home'" class="main-page">
-        <h1>Welcome to Financial Tracker</h1>
+        <h1>Add Info to Financial Tracker</h1>
         <p class="info-text">
           This service allows you to track your expenses and see your spending patterns.
         </p>
