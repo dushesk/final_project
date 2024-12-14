@@ -136,7 +136,7 @@ export default {
         }
 
         // Запрос к API для получения расходов
-        const expensesResponse = await fetch(`http://localhost:3000/expenses/${userId}/info`);
+        const expensesResponse = await fetch(`http://localhost:3000/users/expenses/${userId}/info`);
         if (expensesResponse.ok) {
           this.expenses = await expensesResponse.json();
         }
