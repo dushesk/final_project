@@ -62,15 +62,13 @@
         <div class="form-container">
           <form @submit.prevent="addExpense">
             <div>
-              <!-- <label for="categoryInput">Category Id</label>
-              <select v-model="newExpense.category_id" required>
+              <label for="categoryInput">Category</label>
+              <select v-model="newExpense.category_id" id="categoryInput" required>
                 <option value="" disabled>Select Category</option>
                 <option v-for="category in categories" :key="category._id" :value="category._id">
                   {{ category.name }}
                 </option>
-              </select> -->
-              <label for="categoryInput">Category Id</label>
-              <input type="text" id="categoryInput" v-model="newExpense.category_id" required />
+              </select>
             </div>
             <div>
               <label for="amount">Amount</label>
