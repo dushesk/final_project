@@ -63,7 +63,7 @@
           <form @submit.prevent="addExpense">
             <div>
               <label for="categoryInput">Category</label>
-              <select v-model="newExpense.category_id" id="categoryInput" required>
+              <select id="categoryInput" v-model="newExpense.category_id" required>
                 <option value="" disabled>Select Category</option>
                 <option v-for="category in categories" :key="category._id" :value="category._id">
                   {{ category.name }}
@@ -140,6 +140,17 @@ export default {
         console.error('Error fetching data:', error);
       }
     }
+    try {
+      // Получение списка категорий с сервера
+      const response = await fetch('http://localhost:3000/categories/categories');
+      if (response.ok) {
+        this.categories = await response.json();
+      } else {
+        console.error('Failed to fetch categories');
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
   },
   methods: {
     goToPage(page) {
@@ -168,6 +179,41 @@ export default {
         this.expenseIdToDelete = '';
       } else {
         alert('Expense not found!');
+      }
+    },
+    async addExpense() {
+      try {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+          alert('User ID is missing!');
+          return;
+        }
+        const expenseData = {
+          user_id: userId,
+          category_id: this.newExpense.category_id,
+          amount: this.newExpense.amount,
+          date: this.newExpense.date,
+          description: this.newExpense.description,
+        };
+
+        // Отправка данных на сервер
+        const response = await fetch('http://localhost:3000/expenses', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(expenseData),
+        });
+
+        if (response.ok) {
+          alert('Expense added successfully!');
+          this.newExpense = { category_id: '', amount: '', date: '', description: '' }; // Очистка формы
+        } else {
+          const errorData = await response.json();
+          alert(`Failed to add expense: ${errorData.error}`);
+        }
+      } catch (error) {
+        console.error('Error adding expense:', error);
       }
     }
   }
